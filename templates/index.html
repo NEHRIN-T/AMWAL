@@ -1,0 +1,323 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMWAL Portfolio Analytics | H. Siddiqui</title>
+    
+    <!-- Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS Foundation -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    
+    <!-- Analytical Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <img src="{% static 'images/logo.png.png' %}" class="logo-img" alt="Amwal Logo">
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-section-title">Intelligence</div>
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-target="view-portfolio">
+                        <i data-lucide="layout-dashboard"></i>
+                        <span>Portfolio Overview</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-target="view-rental">
+                        <i data-lucide="trending-down"></i>
+                        <span>Rental Intelligence</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-target="view-occupancy">
+                        <i data-lucide="building"></i>
+                        <span>Occupancy & Vacancy</span>
+                    </a>
+                </li>
+
+                <div class="nav-section-title" style="margin-top: 32px;">Finance</div>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-target="view-financial">
+                        <i data-lucide="pie-chart"></i>
+                        <span>Financial Dashboard</span>
+                    </a>
+                </li>
+
+                <div class="nav-section-title" style="margin-top: 32px;">Account</div>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-target="view-owner">
+                        <i data-lucide="user"></i>
+                        <span>Owner Profile</span>
+                    </a>
+                </li>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-wrapper">
+            
+            <!-- Global Header -->
+            <header class="header">
+                <div class="header-left">
+                    <div class="client-info">
+                        <span class="client-label">Client</span>
+                        <span class="client-name">H. Siddiqui</span>
+                    </div>
+                    <div class="portfolio-info">
+                        <span class="portfolio-label">Portfolio</span>
+                        <span class="portfolio-value">60 Units</span>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <button class="header-btn">
+                        <i data-lucide="calendar"></i>
+                        <span>Mar 2026</span>
+                    </button>
+                    <!-- AI Analyst Button (Phase 8/3) -->
+                    <button class="ai-analyst-btn" style="margin: 0; padding: 10px 18px; border-radius: 12px; font-size: 0.9rem;">
+                        <i data-lucide="sparkles" style="width: 18px; height: 18px;"></i>
+                        <span>AI Analyst</span>
+                    </button>
+                    <div class="profile-avatar">HS</div>
+                </div>
+            </header>
+
+            <!-- ================= VIEW: PORTFOLIO OVERVIEW ================= -->
+            <section id="view-portfolio" class="view-section active">
+                
+                <!-- 1. KPI Row (5 cards) -->
+                <div class="kpi-row" id="portfolio-kpis">
+                    <!-- Dynamic KPI Cards -->
+                </div>
+
+                <!-- 2. Charts row (Donut left, Occupancy right) -->
+                <div class="charts-row">
+                    <div class="card chart-card half">
+                        <div class="card-title">Portfolio Composition</div>
+                        <div class="chart-container">
+                            <canvas id="chart-composition"></canvas>
+                        </div>
+                    </div>
+                    <div class="card chart-card half">
+                        <div class="card-title">Occupancy Distribution</div>
+                        <div class="chart-container">
+                            <canvas id="chart-occupancy-bars"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Trend chart (full width) -->
+                <div class="card chart-card full">
+                    <div class="card-title">12-Month Occupancy Trend</div>
+                    <div class="chart-container">
+                        <canvas id="chart-trend"></canvas>
+                    </div>
+                </div>
+
+                <!-- 4. Alerts panel -->
+                <div id="alerts-panel" class="alerts-container"></div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 40px; margin-bottom: 24px;">
+                    <h3 class="card-title" style="margin: 0;">Portfolio Register</h3>
+                    <div class="property-filters">
+                        <button class="filter-btn active" data-filter="All">All Assets</button>
+                        <button class="filter-btn" data-filter="Luxury Villas">LX Villas</button>
+                        <button class="filter-btn" data-filter="Standard Villas">Villas</button>
+                        <button class="filter-btn" data-filter="Larger Apartments">Apartments</button>
+                        <button class="filter-btn" data-filter="Standard Flats">Flats</button>
+                        <button class="filter-btn" data-filter="Vacant">Vacant</button>
+                    </div>
+                </div>
+
+                <div id="property-grid" class="properties-grid">
+                    <!-- Dynamic Property Cards -->
+                </div>
+            </section>
+
+            <!-- ================= VIEW: PROPERTY DETAIL ================= -->
+            <section id="view-property-detail" class="view-section">
+                <div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+                    <button class="header-btn" id="btn-back">
+                        <i data-lucide="arrow-left"></i>
+                        <span>Back to Dashboard</span>
+                    </button>
+                    <div id="detail-header-info">
+                        <span id="detail-ref" class="status-pill status-review">--</span>
+                    </div>
+                </div>
+
+                <div class="property-detail-grid">
+                    <!-- Left: Gallery -->
+                    <div class="detail-gallery">
+                        <div id="detail-main-img" class="main-detail-img"></div>
+                        <div id="detail-thumb-strip" class="thumb-strip"></div>
+                    </div>
+
+                    <!-- Right: Info -->
+                    <div class="detail-info-panel">
+                        <div class="card">
+                            <h2 id="detail-name" style="font-size: 2rem; font-weight: 800; margin-bottom: 8px;">--</h2>
+                            <p id="detail-loc" style="color: var(--text-muted); font-weight: 700; margin-bottom: 24px;">--</p>
+                            
+                            <div class="detail-stats-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                                <div>
+                                    <span class="kpi-label">Type</span>
+                                    <span id="detail-type" class="kpi-value-small" style="font-size: 1.1rem; display: block; font-weight: 800;">--</span>
+                                </div>
+                                <div>
+                                    <span class="kpi-label">Floor Area</span>
+                                    <span id="detail-area" class="kpi-value-small" style="font-size: 1.1rem; display: block; font-weight: 800;">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-title">Rental Analysis</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                                <div>
+                                    <span class="kpi-label">Current Rent (Annual)</span>
+                                    <span id="detail-rent-annual" class="kpi-value" style="font-size: 1.5rem;">--</span>
+                                </div>
+                                <div>
+                                    <span class="kpi-label">Market Rent (Annual)</span>
+                                    <span id="detail-market-annual" class="kpi-value" style="font-size: 1.5rem; color: var(--success);">--</span>
+                                </div>
+                                <div style="grid-column: span 2; border-top: 1px solid var(--border); padding-top: 16px;">
+                                    <span class="kpi-label">Annual Rent Gap</span>
+                                    <span id="detail-rent-gap" class="kpi-value" style="font-size: 1.5rem; color: var(--danger);">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="detail-lease-card" class="card" style="display: none;">
+                            <div class="card-title">Lease & Tenant Information</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                <div>
+                                    <span class="kpi-label">Tenant Name</span>
+                                    <span id="detail-tenant-name" style="font-weight: 800; display: block;">--</span>
+                                </div>
+                                <div>
+                                    <span class="kpi-label">Email</span>
+                                    <span id="detail-tenant-email" style="font-weight: 700; display: block; color: var(--primary);">--</span>
+                                </div>
+                                <div>
+                                    <span class="kpi-label">Lease End</span>
+                                    <span id="detail-lease-end" style="font-weight: 800; display: block;">--</span>
+                                </div>
+                                <div>
+                                    <span class="kpi-label">Monthly Rent</span>
+                                    <span id="detail-lease-rent" style="font-weight: 800; display: block;">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= VIEW: RENTAL INTELLIGENCE ================= -->
+            <section id="view-rental" class="view-section">
+                <div class="kpi-row" id="rental-kpis"></div>
+
+                <div class="card chart-card full">
+                    <div class="card-title">Current vs Market Rent Comparison</div>
+                    <div class="chart-container">
+                        <canvas id="chart-rental-comparison"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Priority Rent Review List</div>
+                    <div id="rental-table-container"></div>
+                </div>
+            </section>
+
+            <!-- ================= VIEW: OCCUPANCY & VACANCY ================= -->
+            <section id="view-occupancy" class="view-section">
+                <div class="kpi-row" id="occupancy-kpis"></div>
+
+                <div class="card">
+                    <div class="card-title">Vacant Units Register</div>
+                    <div id="occupancy-table-container"></div>
+                </div>
+            </section>
+
+            <!-- ================= VIEW: FINANCIAL DASHBOARD ================= -->
+            <section id="view-financial" class="view-section">
+                <div class="kpi-row" id="financial-kpis"></div>
+
+                <div class="charts-row">
+                    <div class="card chart-card half">
+                        <div class="card-title">Revenue Waterfall Analysis</div>
+                        <div id="chart-waterfall"></div>
+                    </div>
+                    <div class="card chart-card half">
+                        <div class="card-title">Income Growth Trend</div>
+                        <div class="chart-container">
+                            <canvas id="chart-income-trend"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Scenario Analysis (LTV vs Yield)</div>
+                    <div id="chart-scenarios" style="height: 350px;"></div>
+                </div>
+            </section>
+
+            <!-- ================= VIEW: OWNER PROFILE ================= -->
+            <section id="view-owner" class="view-section">
+                <div class="card" style="text-align: left; padding: 40px;">
+                    <div style="display: flex; align-items: center; gap: 24px; margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 32px;">
+                        <div class="profile-avatar" style="width: 100px; height: 100px; font-size: 2.5rem; border-radius: 24px;">HS</div>
+                        <div>
+                            <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 8px; color: var(--text-main);">H. Siddiqui</h1>
+                            <p style="color: var(--text-muted); font-size: 1.1rem; font-weight: 700; margin-bottom: 4px;">Role: Portfolio Owner</p>
+                            <p style="color: var(--text-muted); font-size: 1.1rem; font-weight: 700;">Portfolio Size: 60 Units</p>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin-bottom: 24px; color: var(--text-main); font-weight: 800; font-size: 1.2rem;">KPI SECTION</h3>
+                    <div class="detail-stats-grid" id="owner-kpis" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-bottom: 40px;">
+                        <!-- Dynamically populated by script.js -->
+                    </div>
+
+                    <h3 style="margin-bottom: 24px; color: var(--text-main); font-weight: 800; font-size: 1.2rem;">DETAILS</h3>
+                    <div class="detail-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px;">
+                        <div class="card" style="margin-bottom: 0;">
+                            <span class="kpi-label">Portfolio Type</span>
+                            <span class="kpi-value" style="font-size: 1.2rem;">Residential</span>
+                        </div>
+                        <div class="card" style="margin-bottom: 0;">
+                            <span class="kpi-label">Total Assets</span>
+                            <span class="kpi-value" style="font-size: 1.2rem;">60 Units</span>
+                        </div>
+                        <div class="card" style="margin-bottom: 0;">
+                            <span class="kpi-label">Investment Focus</span>
+                            <span class="kpi-value" style="font-size: 1.2rem;">Villas & Apartments</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Application Logic -->
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
